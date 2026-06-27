@@ -1,0 +1,24 @@
+# Asset License & Copyright Restrictions
+
+Copyright © 2026 Nakuya. All Rights Reserved.
+
+This repository contains both open-source source code and proprietary creative assets. While the underlying functional source code, layout logic, and software architecture are licensed under the GNU Affero General Public License v3.0 (AGPL-3.0), the creative branding and design assets are strictly protected under traditional copyright.
+
+## 1. Protected Creative Assets
+The restrictions outlined in this document apply to all visual, brand, and creative content within this repository, including but not limited to:
+*   The "Weekly Game Design Challenge" name, trademark, and logos.
+*   All custom typography, pixel art headers, and graphics.
+*   The specific orange background pattern and icon margins.
+*   All site text, challenge statements, database content examples, and copywrited text.
+
+## 2. Terms of Use & Restrictions
+*   **No Redistribution:** You may not redistribute, re-license, publish, or publicly display any of the protected creative assets listed above in an unmodified or standalone state.
+*   **Mandatory Branding Removal:** If you fork, clone, or redistribute the AGPL-3.0 covered source code of this project to host your own version over a network, you are legally required to remove all unique branding, logos, graphics, and text content belonging to Nakuya and replace them with your own original assets.
+*   **No Endorsement:** You may not use the name "Nakuya" or "Weekly Game Design Challenge" to endorse or promote any derivative work or hosted clone without explicit, prior written permission.
+
+## 3. Exceptions
+Permission is granted to download and cache these assets locally for the sole purpose of personal viewing, web browsing, or contributing to the development of this repository via approved pull requests.
+
+---
+
+For inquiries regarding commercial use or asset licensing permissions, please contact the repository owner.
