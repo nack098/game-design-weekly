@@ -71,7 +71,7 @@ export function Challenge({ statement, startDate, submissions }: ChallengeProps)
           <p className="text-center text-gray-400 text-sm">No submissions yet.</p>
         </div>
       ) : (
-        <div className="w-full grid grid-cols-3 gap-y-4 object-center justify-items-center items-center">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 object-center justify-items-center items-center">
           {submissions.map((submission, index) => (
             <Card key={index} {...submission} />
           ))}

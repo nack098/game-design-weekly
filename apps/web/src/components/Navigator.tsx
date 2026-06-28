@@ -6,7 +6,7 @@ export function Navigator() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <nav className="fixed top-5 right-5 md:left-16 md:top-[25%] z-40 w-auto">
+    <nav className="fixed top-5 right-5 md:left-16 md:top-[25%] z-40 w-52">
       <div className="hidden md:block">
         <div className="flex flex-row gap-2 items-center text-center">
           <LayersIcon className="inline bg-white rounded-full p-1 z-50" width={24} />
@@ -63,7 +63,7 @@ export function Navigator() {
             />
             <span
               className={`block w-4 h-[0.02rem] bg-white transition-all duration-300
-              ${isOpen ? "opacity-0 scale-0" : "opacity-100"}`}
+              ${isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"}`}
             />
             <span
               className={`block w-4 h-[0.02rem] bg-white transition-all duration-300
