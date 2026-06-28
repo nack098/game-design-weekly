@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/web/public/logo.png" alt="Weekly Game Design Challenge" width="440" />
+  <img src="apps/web/public/logo-banner.jpg" alt="Weekly Game Design Challenge" width="440" />
 
   <p><strong>A weekly game design challenge.</strong><br/>
   Every week, a small random idea drops — design a game around it, share your concept, and learn from everyone else's.</p>
