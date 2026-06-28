@@ -1,5 +1,5 @@
-- [-] Core Interface
-- [ ] Responsive Interface
+- [x] Core Interface
+- [x] Responsive Interface
 - [ ] API Connection
 - [ ] Backend
 - [ ] Database Integration

@@ -61,12 +61,18 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-y-auto min-h-screen m-0 p-0">
       <head>
         <HeadContent />
       </head>
-      <body className="bg-[url(/bg.webp)] bg-repeat w-full min-h-screen">
-        {children}
+      <body className="w-full min-h-screen m-0 p-0 relative bg-transparent">
+        <div
+          className="fixed inset-0 z-0 bg-[url(/bg.webp)] bg-repeat bg-size-[7rem] md:bg-size-[10rem] pointer-events-none"
+        />
+        <div className="relative z-10 w-full min-h-screen">
+          {children}
+        </div>
+
         <TanStackDevtools
           config={{
             position: 'bottom-right',

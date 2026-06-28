@@ -1,46 +1,123 @@
 import { Link } from '@tanstack/react-router'
 import { HistoryIcon, HomeIcon, InfoIcon, LayersIcon } from 'lucide-react'
+import { useState } from 'react';
 
 export function Navigator() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
-    <nav className="fixed left-16 top-[25%] z-10">
-      <div className="flex flex-row gap-2 items-center text-center">
-        <LayersIcon className="inline bg-white rounded-full p-1 z-50" width={24} />
-        <p className="text-orange-400 text-outline-white text-sm inline">CONTENTS</p>
+    <nav className="fixed top-5 right-5 md:left-16 md:top-[25%] z-40 w-auto">
+      <div className="hidden md:block">
+        <div className="flex flex-row gap-2 items-center text-center">
+          <LayersIcon className="inline bg-white rounded-full p-1 z-50" width={24} />
+          <p className="text-orange-400 text-outline-white text-sm inline">CONTENTS</p>
+        </div>
+        <div className="flex flex-row gap-7 -mt-2 ml-[0.7rem]">
+          <div className="w-[0.095rem] bg-orange-400 [box-shadow:0_0_2px_1px_white]" />
+          <ul className="flex flex-col gap-4 text-black text-outline-white drop-shadow-md pt-5">
+            <li className="transition-colors hover:text-orange-400 duration-150">
+              <Link
+                to="/"
+                hash="top"
+                activeOptions={{ exact: true }}
+                activeProps={{ className: 'text-orange-400' }}
+                className="flex items-center gap-2"
+              >
+                <HomeIcon width={16} className="icon-outline-white" /> Top
+              </Link>
+            </li>
+            <li className="transition-colors hover:text-orange-400 duration-150">
+              <Link
+                to="/history"
+                activeProps={{ className: 'text-orange-400' }}
+                className="flex items-center gap-2"
+              >
+                <HistoryIcon width={16} className="icon-outline-white" /> Challenge History
+              </Link>
+            </li>
+            <li className="transition-colors hover:text-orange-400 duration-150">
+              <Link
+                to="/about"
+                activeProps={{ className: 'text-orange-400' }}
+                className="flex items-center gap-2"
+              >
+                <InfoIcon width={16} className="icon-outline-white" /> About
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div className="flex flex-row gap-7 -mt-2 ml-[0.7rem]">
-        <div className="w-[0.095rem] bg-orange-400 [box-shadow:0_0_2px_1px_white]" />
-        <ul className="flex flex-col gap-4 text-black text-outline-white drop-shadow-md pt-5">
-          <li className="transition-colors hover:text-orange-400 duration-150">
-            <Link
-              to="/"
-              href="/#top"
-              activeOptions={{ exact: true }}
-              activeProps={{ className: 'text-orange-400' }}
-              className="flex items-center gap-2"
-            >
-              <HomeIcon width={16} className="icon-outline-white" /> Top
-            </Link>
-          </li>
-          <li className="transition-colors hover:text-orange-400 duration-150">
-            <Link
-              to="/history"
-              activeProps={{ className: 'text-orange-400' }}
-              className="flex items-center gap-2"
-            >
-              <HistoryIcon width={16} className="icon-outline-white" /> Challenge History
-            </Link>
-          </li>
-          <li className="transition-colors hover:text-orange-400 duration-150">
-            <Link
-              to="/about"
-              activeProps={{ className: 'text-orange-400' }}
-              className="flex items-center gap-2"
-            >
-              <InfoIcon width={16} className="icon-outline-white" /> About
-            </Link>
-          </li>
-        </ul>
+
+      {/* Mobile Menu */}
+      <div className="block md:hidden">
+        <div className="fixed bg-red-600 rounded-full w-12 h-12 translate-y-[-4%] translate-x-[-4%] z-50 pointer-events-none" />
+        <button
+          className="relative z-50 cursor-pointer rounded-full bg-black w-11 h-11 flex flex-col justify-center items-center"
+          onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen) }}
+          aria-label="Toggle Menu"
+        >
+          <div className="relative w-4 h-3 flex flex-col justify-between items-center">
+            <span
+              className={`block w-4 h-[0.02rem] bg-white transition-all duration-300
+              ${isOpen ? "translate-y-1.5 rotate-45" : "rotate-0"}`}
+            />
+            <span
+              className={`block w-4 h-[0.02rem] bg-white transition-all duration-300
+              ${isOpen ? "opacity-0 scale-0" : "opacity-100"}`}
+            />
+            <span
+              className={`block w-4 h-[0.02rem] bg-white transition-all duration-300
+              ${isOpen ? "translate-x-[-0.04rem] -translate-y-1.5 -rotate-45" : "rotate-0"}`}
+            />
+          </div>
+        </button>
+
+        <div className={`fixed top-0 right-0 z-30 bg-white w-screen h-screen ${isOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out`}>
+          <div className="flex flex-row h-full w-full">
+            <div className="flex-1 h-full bg-[url(/bg.webp)] bg-repeat bg-size-[7rem] bg-center shrink-0">
+              <div className="flex w-full h-full justify-center items-center p-12">
+                <img src="/logo.webp" alt="Logo" width={256} className="w-42" />
+              </div>
+            </div>
+
+            <div className="flex-1 min-w-68">
+              <ul className="flex flex-col gap-3 text-black text-outline-white pt-5 ml-6 my-5 text-sm">
+                <li className="transition-colors hover:text-orange-400 duration-150">
+                  <Link
+                    to="/"
+                    hash="top"
+                    activeOptions={{ exact: true }}
+                    activeProps={{ className: 'text-orange-400' }}
+                    className="flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <HomeIcon width={16} className="icon-outline-white" /> Top
+                  </Link>
+                </li>
+                <li className="transition-colors hover:text-orange-400 duration-150">
+                  <Link
+                    to="/history"
+                    activeProps={{ className: 'text-orange-400' }}
+                    className="flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <HistoryIcon width={16} className="icon-outline-white" /> Challenge History
+                  </Link>
+                </li>
+                <li className="transition-colors hover:text-orange-400 duration-150">
+                  <Link
+                    to="/about"
+                    activeProps={{ className: 'text-orange-400' }}
+                    className="flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <InfoIcon width={16} className="icon-outline-white" /> About
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
   )

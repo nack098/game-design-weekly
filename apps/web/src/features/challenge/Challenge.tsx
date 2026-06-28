@@ -33,34 +33,37 @@ export function Challenge({ statement, startDate, submissions }: ChallengeProps)
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-0.5 md:gap-2 justify-center text-center md:justify-start">
         <TargetIcon width={18} className="text-orange-400" />
-        <h2 className="font-bold">Challenge Statement:</h2>
+        <h2 className="font-bold">Challenge Statement</h2>
       </div>
-      <div className="flex justify-around mt-2 px-10 mb-3">
+      <div className="flex justify-around mt-2 px-2 md:px-10 mb-3">
         <div className="pr-4 bg-sky-100 rounded-md flex flex-row gap-2 max-w-240 w-full">
           <div className="w-4 bg-sky-500 rounded-l-md mr-1" />
           <p className="italic text-pretty py-2 text-sm">“{statement.trim()}”</p>
         </div>
       </div>
-      <div className="flex justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <Gamepad2Icon width={18} className="text-orange-400" />
-          <h2 className="font-bold">Submissions</h2>
+      <div className="mb-3">
+        <div className="flex justify-between mb-1 md:mb-0">
+          <div className="flex items-center gap-1 md:gap-2">
+            <Gamepad2Icon width={18} className="text-orange-400" />
+            <h2 className="font-bold">Submissions</h2>
+          </div>
+          <div className="flex flew-row gap-3 align-middle text-center items-center">
+            <p className="text-sm text-gray-500 hidden md:block">{startDate.toLocaleDateString()} - {submissionEnd.toLocaleDateString()}</p>
+            <button
+              disabled={!isSubmissionOpen}
+              className={`px-3 py-2 text-white text-xs shadow-sm border-gray-100 rounded-md transition-colors duration-200 ease-in-out ${isSubmissionOpen
+                ? "cursor-pointer bg-red-500 hover:bg-red-600"
+                : "cursor-not-allowed bg-gray-400"
+                }`}
+              onClick={(e) => { e.preventDefault(); setIsOpen(true) }}
+            >
+              {isSubmissionOpen ? "Submit" : "Submission Closed"}
+            </button>
+          </div>
         </div>
-        <div className="flex flew-row gap-3 align-middle text-center items-center">
-          <p className="text-sm text-gray-500">{startDate.toLocaleDateString()} - {submissionEnd.toLocaleDateString()}</p>
-          <button
-            disabled={!isSubmissionOpen}
-            className={`px-3 py-2 text-white text-xs shadow-sm border-gray-100 rounded-md transition-colors duration-200 ease-in-out ${isSubmissionOpen
-              ? "cursor-pointer bg-red-500 hover:bg-red-600"
-              : "cursor-not-allowed bg-gray-400"
-              }`}
-            onClick={(e) => { e.preventDefault(); setIsOpen(true) }}
-          >
-            {isSubmissionOpen ? "Submit" : "Submission Closed"}
-          </button>
-        </div>
+        <p className="text-center text-sm text-gray-500 block md:hidden">{startDate.toLocaleDateString()} - {submissionEnd.toLocaleDateString()}</p>
       </div>
       {submissions.length === 0 ? (
         <div className="py-10 w-full flex flex-col justify-center items-center">

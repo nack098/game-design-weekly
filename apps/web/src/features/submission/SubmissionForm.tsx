@@ -13,7 +13,7 @@ export function SubmissionForm({ onClose }: { onClose: () => void }) {
   const [description, setDescription] = useState('')
 
   return (
-    <div className="w-[48rem] max-w-[92vw] max-h-[90vh] overflow-y-auto bg-white rounded-xl p-7">
+    <div className="w-3xl max-w-[92vw] max-h-[90vh] overflow-y-auto bg-white rounded-xl p-7">
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
           <PencilIcon width={18} className="text-orange-400" />
