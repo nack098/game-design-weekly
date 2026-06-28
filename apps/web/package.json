@@ -6,14 +6,14 @@
     "#/*": "./src/*"
   },
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "generate-routes": "tsr generate",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "lint": "eslint",
-    "format": "prettier --write . && eslint --fix",
-    "check": "prettier --check ."
+    "web:dev": "vite dev --port 3000",
+    "web:generate-routes": "tsr generate",
+    "web:build": "vite build",
+    "web:preview": "vite preview",
+    "web:test": "vitest run",
+    "web:lint": "eslint",
+    "web:format": "prettier --write . && eslint --fix",
+    "web:check": "prettier --check ."
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -41,7 +41,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9.20.0",
+    "eslint": "^9.39.4",
     "jsdom": "^28.1.0",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",

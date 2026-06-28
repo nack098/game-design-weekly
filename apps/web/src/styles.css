@@ -2,6 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
+@layer utilities {
+  .text-outline-white {
+    -webkit-text-stroke: 0.25em white; /* Adjust thickness here */
+    paint-order: stroke fill;
+  }
+
+  /* text-stroke doesn't apply to SVGs, so outline icons with a white halo instead */
+  .icon-outline-white {
+    filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+      drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+  }
+}
+
 @theme {
   --font-sans: 'Inter', sans-serif;
 }
