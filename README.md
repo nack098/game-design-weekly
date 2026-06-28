@@ -112,6 +112,11 @@ Made by **Nakuya**.
 
 ## License
 
-Released under the **GNU Affero General Public License v3.0** — see [LICENSE](LICENSE).
+This project is **dual-licensed** — the code and the creative assets are covered separately:
+
+- **Source code** (functional code, layout logic, architecture) → **GNU Affero General Public License v3.0 (AGPL-3.0)**. See [LICENSE](LICENSE).
+- **Creative assets** (the "Weekly Game Design Challenge" name & logos, custom typography and pixel-art headers, the orange background/graphics, and all site text & challenge statements) → **© 2026 Nakuya, All Rights Reserved** (proprietary). See [CODE_OF_CONDUCT](CODE_OF_CONDUCT) for the full terms.
+
+> ⚠️ **Forking or self-hosting?** The AGPL-3.0 code is yours to use, but you **must remove all of Nakuya's branding, logos, graphics, and text and replace them with your own original assets** — and you may not use the "Nakuya" or "Weekly Game Design Challenge" names to promote your version. See [CODE_OF_CONDUCT](CODE_OF_CONDUCT).
 
 © 2026 Nakuya
