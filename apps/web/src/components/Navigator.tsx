@@ -6,8 +6,8 @@ export function Navigator() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <nav className="fixed top-5 right-5 md:left-16 md:top-[25%] z-40 w-52">
-      <div className="hidden md:block">
+    <nav className="fixed top-5 right-5 md:right-auto md:left-16 md:top-[25%] z-40 pointer-events-none">
+      <div className="hidden md:block pointer-events-auto">
         <div className="flex flex-row gap-2 items-center text-center">
           <LayersIcon className="inline bg-white rounded-full p-1 z-50" width={24} />
           <p className="text-orange-400 text-outline-white text-sm inline">CONTENTS</p>
@@ -49,7 +49,7 @@ export function Navigator() {
       </div>
 
       {/* Mobile Menu */}
-      <div className="block md:hidden">
+      <div className="block md:hidden pointer-events-auto">
         <div className="fixed bg-red-600 rounded-full w-12 h-12 translate-y-[-4%] translate-x-[-4%] z-50 pointer-events-none" />
         <button
           className="relative z-50 cursor-pointer rounded-full bg-black w-11 h-11 flex flex-col justify-center items-center"
