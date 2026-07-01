@@ -21,21 +21,21 @@ var jsonWebKeySet = new JsonWebKeySet(jwksJson);
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKeys = jsonWebKeySet.Keys,
-        ValidateIssuer = true,
-        ValidIssuer = $"{supabaseUrl.TrimEnd('/')}/auth/v1",
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
+  options.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKeys = jsonWebKeySet.Keys,
+    ValidateIssuer = true,
+    ValidIssuer = $"{supabaseUrl.TrimEnd('/')}/auth/v1",
+    ValidateAudience = false,
+    ValidateLifetime = true,
+    ClockSkew = TimeSpan.Zero
+  };
 });
 
 builder.Services.AddAuthorization();
@@ -49,25 +49,26 @@ var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AppCorsPolicy", policy =>
-    {
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+  options.AddPolicy("AppCorsPolicy", policy =>
+  {
+    policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+  });
 });
+
 Console.WriteLine("Allowed origins:");
 
 foreach (var origin in allowedOrigins)
 {
-    Console.WriteLine(origin);
+  Console.WriteLine(origin);
 }
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+  app.UseDeveloperExceptionPage();
 }
 //else
 //{
