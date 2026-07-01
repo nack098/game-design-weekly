@@ -5,27 +5,35 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("SupabasePostgres")
-    ?? throw new InvalidOperationException("Missing DB connection string");
+var connectionString =
+    builder.Configuration.GetConnectionString("SupabasePostgres")
+    ?? throw new InvalidOperationException("Missing connection string");
 
-// DB
+// ---------------- DB ----------------
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(connectionString, npgsql =>
     {
-        npgsql.CommandTimeout(10); // IMPORTANT for Supabase free tier stability
+        npgsql.CommandTimeout(10);
+        npgsql.EnableRetryOnFailure(5);
+
+        // IMPORTANT: makes EF Core more PgBouncer-friendly
+        npgsql.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
     });
+
+    // IMPORTANT: reduces tracking overhead (VERY important on pooler)
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
-// CORS
+// ---------------- CORS ----------------
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>()
     ?? new[] { "http://localhost:5173" };
 
-builder.Services.AddCors(options =>
+builder.Services.AddCors(opt =>
 {
-    options.AddPolicy("AppCorsPolicy", policy =>
+    opt.AddPolicy("AppCorsPolicy", policy =>
     {
         policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()

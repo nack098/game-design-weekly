@@ -16,39 +16,40 @@ public class SubmissionController(AppDbContext context) : ControllerBase
     [HttpGet("challenge/{challengeId:guid}")]
     public async Task<IActionResult> GetByChallengeId(Guid challengeId)
     {
-        var challengeExists = await _context.Challenges
+        var exists = await _context.Challenges
             .AnyAsync(c => c.Id == challengeId);
 
-        if (!challengeExists)
+        if (!exists)
             return NotFound();
 
-        var submissions = await _context.Submissions
+        var result = await _context.Submissions
+            .AsNoTracking()
             .Where(s => s.ChallengeId == challengeId)
-            .Select(s => MapToResponse(s))
             .ToArrayAsync();
 
-        return Ok(submissions);
+        return Ok(result.Select(Map));
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var submission = await _context.Submissions
+            .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (submission == null)
             return NotFound();
 
-        return Ok(MapToResponse(submission));
+        return Ok(Map(submission));
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(SubmissionCreateModel model)
     {
-        var challengeExists = await _context.Challenges
+        var exists = await _context.Challenges
             .AnyAsync(c => c.Id == model.ChallengeId);
 
-        if (!challengeExists)
+        if (!exists)
             return BadRequest("Invalid challenge");
 
         var entity = new SubmissionEntity
@@ -66,12 +67,11 @@ public class SubmissionController(AppDbContext context) : ControllerBase
         _context.Submissions.Add(entity);
         await _context.SaveChangesAsync();
 
-        return Ok(MapToResponse(entity));
+        return Ok(Map(entity));
     }
 
-    private static SubmissionResponseModel MapToResponse(SubmissionEntity e)
-    {
-        return new SubmissionResponseModel(
+    private static SubmissionResponseModel Map(SubmissionEntity e)
+        => new(
             e.Id,
             e.ChallengeId,
             e.ImageLink,
@@ -81,5 +81,4 @@ public class SubmissionController(AppDbContext context) : ControllerBase
             e.DocsLink,
             e.ShortDescription
         );
-    }
 }
