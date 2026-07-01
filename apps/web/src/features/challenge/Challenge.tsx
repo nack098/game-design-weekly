@@ -1,35 +1,26 @@
 import { useState } from 'react'
 import { Gamepad2Icon, TargetIcon } from 'lucide-react'
-
 import { Card } from '../../components/Card'
 import { Overlay } from '../../components/Overlay'
 import { SubmissionForm } from '../submission'
-
-export interface Submission {
-  title: string
-  description: string
-  author: string
-  image: string
-  href: string
-}
+import type { Submission } from '#/types/api'
 
 interface ChallengeProps {
+  challengeId: string
   statement: string
   startDate: Date
+  endDate: Date
   submissions: Submission[]
+  onSuccess?: () => void
 }
 
-const SUBMISSION_WINDOW_DAYS = 7
 
-export function Challenge({ statement, startDate, submissions }: ChallengeProps) {
+export function Challenge({ challengeId, statement, startDate, endDate, submissions, onSuccess }: ChallengeProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const now = new Date()
 
-  const submissionEnd = new Date(startDate)
-  submissionEnd.setDate(submissionEnd.getDate() + SUBMISSION_WINDOW_DAYS)
-
-  const isSubmissionOpen = now >= startDate && now <= submissionEnd
+  const isSubmissionOpen = now >= startDate && now <= endDate
 
   return (
     <>
@@ -50,7 +41,7 @@ export function Challenge({ statement, startDate, submissions }: ChallengeProps)
             <h2 className="font-bold">Submissions</h2>
           </div>
           <div className="flex flew-row gap-3 align-middle text-center items-center">
-            <p className="text-sm text-gray-500 hidden md:block">{startDate.toLocaleDateString()} - {submissionEnd.toLocaleDateString()}</p>
+            <p className="text-sm text-gray-500 hidden md:block">{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</p>
             <button
               disabled={!isSubmissionOpen}
               className={`px-3 py-2 text-white text-xs shadow-sm border-gray-100 rounded-md transition-colors duration-200 ease-in-out ${isSubmissionOpen
@@ -63,7 +54,7 @@ export function Challenge({ statement, startDate, submissions }: ChallengeProps)
             </button>
           </div>
         </div>
-        <p className="text-center text-sm text-gray-500 block md:hidden">{startDate.toLocaleDateString()} - {submissionEnd.toLocaleDateString()}</p>
+        <p className="text-center text-sm text-gray-500 block md:hidden">{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</p>
       </div>
       {submissions.length === 0 ? (
         <div className="py-10 w-full flex flex-col justify-center items-center">
@@ -72,13 +63,21 @@ export function Challenge({ statement, startDate, submissions }: ChallengeProps)
         </div>
       ) : (
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 object-center justify-items-center items-center">
-          {submissions.map((submission, index) => (
-            <Card key={index} {...submission} />
+          {submissions.map((submission) => (
+            <Card
+              key={submission.id}
+              title={submission.gameName}
+              description={submission.shortDescription}
+              author={submission.author}
+              authorAvatar={submission.authorAvatarUrl}
+              image={submission.imageLink}
+              id={submission.id}
+            />
           ))}
         </div>
       )}
       <Overlay isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <SubmissionForm onClose={() => setIsOpen(false)} />
+        <SubmissionForm challengeId={challengeId} onClose={() => setIsOpen(false)} onSuccess={onSuccess} />
       </Overlay>
     </>
   )

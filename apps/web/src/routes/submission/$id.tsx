@@ -1,22 +1,51 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
-
+import { useEffect, useState } from 'react'
+import { apiHub } from '../../services/apiClient'
 import { SubmissionView } from '../../features/submission'
-import type { SubmissionComment } from '../../features/submission'
+import type { Submission, Comment } from '../../types/api'
 
 export const Route = createFileRoute('/submission/$id')({
   component: RouteComponent,
 })
 
-// Placeholder — will come from the API, keyed by the id param.
-const comments: SubmissionComment[] = [
-  { author: 'Mizuki', body: 'Love the concept — the mechanics doc is super clear.' },
-  { author: 'Ren', body: 'The pixel-art direction fits the theme really well.' },
-]
-
 function RouteComponent() {
   const { id } = Route.useParams()
   const router = useRouter()
+
+  const [submission, setSubmission] = useState<Submission | null>(null)
+  const [commentsList, setCommentsList] = useState<Comment[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const loadContentData = async () => {
+    try {
+      setLoading(true)
+
+      const currentSub = await apiHub.submissions.getById(id)
+      setSubmission(currentSub)
+
+      const comments = await apiHub.comments.getBySubmission(currentSub.id)
+      setCommentsList(comments)
+    } catch (err) {
+      console.error("Failed to resolve game view data entities:", err)
+      setSubmission(null)
+      setCommentsList([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadContentData()
+  }, [id])
+
+  if (loading) {
+    return <div className="text-center py-10 text-sm text-gray-400">Loading submission environment details...</div>
+  }
+
+  if (!submission) {
+    return <div className="text-center py-10 text-sm text-red-400">Submission entry record not found in database.</div>
+  }
 
   return (
     <>
@@ -31,12 +60,15 @@ function RouteComponent() {
         <span className="text-xs text-gray-400">#{id}</span>
       </div>
       <SubmissionView
-        title="Crocodile with a Gun"
-        description="A top-down arena shooter where you play a crocodile wielding an oversized water gun. Soak enemies to slow them, then chomp. (Depends on what you mean by gun.)"
-        author="Author"
-        image="https://lh3.googleusercontent.com/d/1_xkzckhS-blDQZ4q6uLnUDsnpSAgbOK4"
-        docsUrl="https://google.com"
-        comments={comments}
+        submissionId={submission.id}
+        title={submission.gameName}
+        description={submission.shortDescription}
+        author={submission.author}
+        authorAvatar={submission.authorAvatarUrl}
+        image={submission.imageLink}
+        docsUrl={submission.docsLink}
+        comments={commentsList}
+        onCommentPosted={loadContentData}
       />
     </>
   )

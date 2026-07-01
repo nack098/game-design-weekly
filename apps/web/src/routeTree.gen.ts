@@ -13,7 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as HistoryIndexRouteImport } from './routes/history/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as SubmissionIdRouteImport } from './routes/submission/$id'
-import { Route as HistoryDateRouteImport } from './routes/history/$date'
+import { Route as HistoryIdRouteImport } from './routes/history/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,22 +35,22 @@ const SubmissionIdRoute = SubmissionIdRouteImport.update({
   path: '/submission/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HistoryDateRoute = HistoryDateRouteImport.update({
-  id: '/history/$date',
-  path: '/history/$date',
+const HistoryIdRoute = HistoryIdRouteImport.update({
+  id: '/history/$id',
+  path: '/history/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/history/$date': typeof HistoryDateRoute
+  '/history/$id': typeof HistoryIdRoute
   '/submission/$id': typeof SubmissionIdRoute
   '/about/': typeof AboutIndexRoute
   '/history/': typeof HistoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/history/$date': typeof HistoryDateRoute
+  '/history/$id': typeof HistoryIdRoute
   '/submission/$id': typeof SubmissionIdRoute
   '/about': typeof AboutIndexRoute
   '/history': typeof HistoryIndexRoute
@@ -58,25 +58,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/history/$date': typeof HistoryDateRoute
+  '/history/$id': typeof HistoryIdRoute
   '/submission/$id': typeof SubmissionIdRoute
   '/about/': typeof AboutIndexRoute
   '/history/': typeof HistoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/history/$date'
-    | '/submission/$id'
-    | '/about/'
-    | '/history/'
+  fullPaths: '/' | '/history/$id' | '/submission/$id' | '/about/' | '/history/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/history/$date' | '/submission/$id' | '/about' | '/history'
+  to: '/' | '/history/$id' | '/submission/$id' | '/about' | '/history'
   id:
     | '__root__'
     | '/'
-    | '/history/$date'
+    | '/history/$id'
     | '/submission/$id'
     | '/about/'
     | '/history/'
@@ -84,7 +79,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HistoryDateRoute: typeof HistoryDateRoute
+  HistoryIdRoute: typeof HistoryIdRoute
   SubmissionIdRoute: typeof SubmissionIdRoute
   AboutIndexRoute: typeof AboutIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
@@ -120,11 +115,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubmissionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/history/$date': {
-      id: '/history/$date'
-      path: '/history/$date'
-      fullPath: '/history/$date'
-      preLoaderRoute: typeof HistoryDateRouteImport
+    '/history/$id': {
+      id: '/history/$id'
+      path: '/history/$id'
+      fullPath: '/history/$id'
+      preLoaderRoute: typeof HistoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -132,7 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HistoryDateRoute: HistoryDateRoute,
+  HistoryIdRoute: HistoryIdRoute,
   SubmissionIdRoute: SubmissionIdRoute,
   AboutIndexRoute: AboutIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,

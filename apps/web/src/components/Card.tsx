@@ -1,20 +1,23 @@
+import { Link } from "@tanstack/react-router";
+
 interface CardProps {
   title: string;
   description: string;
   author: string;
+  authorAvatar: string;
   image: string;
-  href: string;
+  id: string;
 }
 
-export function Card({ title, description, author, image, href }: CardProps) {
+export function Card({ title, description, author, authorAvatar, image, id }: CardProps) {
   return (
-    <a
-      className="flex flex-col sm:flex-row w-full max-w-[18rem] sm:max-w-none sm:w-[18rem] h-auto sm:h-32 bg-white border border-gray-100 shadow-xs rounded-md overflow-hidden hover:shadow-md transition-shadow"
-      href={href}
-      target="_blank"
+    <Link
+      className="flex flex-col sm:flex-row w-full h-auto sm:h-32 bg-white border border-gray-100 shadow-xs rounded-md overflow-hidden hover:shadow-md transition-shadow"
+      to="/submission/$id"
+      params={{ id: id }}
       rel="noreferrer"
     >
-      <div className="w-full sm:w-32 h-40 sm:h-full shrink-0 overflow-hidden">
+      <div className="w-full sm:w-[50%] h-40 sm:h-full shrink-0 overflow-hidden">
         <img
           src={image}
           className="w-full h-full object-cover"
@@ -27,10 +30,10 @@ export function Card({ title, description, author, image, href }: CardProps) {
         <p className="text-xs text-gray-500 line-clamp-2 sm:line-clamp-3 mt-1 flex-1 text-pretty">
           {description}
         </p>
-        <p className="font-medium text-right text-xs text-gray-400 mt-2 shrink-0">
-          {author}
+        <p className="flex justify-end font-medium text-right text-xs text-gray-400 mt-2 shrink-0 align-middle items-center gap-1">
+          <img src={authorAvatar} height={64} width={64} className="w-5 h-5 object-cover rounded-full inline" /> {author}
         </p>
       </div>
-    </a>
+    </Link>
   )
 }
