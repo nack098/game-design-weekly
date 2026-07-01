@@ -41,11 +41,17 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
+// --- FLEXIBLE CORS SETUP ---
+// Read allowed origins from appsettings.json or environment variables.
+// Fallback to localhost variants if nothing is provided.
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? new[] { "http://localhost:3000", "http://localhost:5173" };
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("DevFrontendPolicy", policy =>
+    options.AddPolicy("AppCorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -59,11 +65,15 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    // Render handles SSL/TLS termination at the proxy level.
+    // Keeping this ensures internal redirect compliance if needed.
     app.UseHttpsRedirection();
 }
 
 app.UseRouting();
-app.UseCors("DevFrontendPolicy");
+
+// Use the updated, flexible policy name here!
+app.UseCors("AppCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
