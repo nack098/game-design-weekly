@@ -63,12 +63,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-else
-{
-    // Render handles SSL/TLS termination at the proxy level.
-    // Keeping this ensures internal redirect compliance if needed.
-    app.UseHttpsRedirection();
-}
+//else
+//{
+// Render handles SSL/TLS termination at the proxy level.
+// Keeping this ensures internal redirect compliance if needed.
+// app.UseHttpsRedirection();
+//}
 
 app.UseRouting();
 
