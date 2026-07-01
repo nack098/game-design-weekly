@@ -2,6 +2,7 @@ using api.Data;
 using api.Entities;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -12,36 +13,40 @@ public class ChallengeController(AppDbContext context) : ControllerBase
     private readonly AppDbContext _context = context;
 
     [HttpGet]
-    public IActionResult GetAllOrByQuery([FromQuery] Guid? id)
+    public async Task<IActionResult> GetAllOrByQuery([FromQuery] Guid? id)
     {
         if (id.HasValue)
         {
-            var challenge = _context.Challenges.Find(id.Value);
+            var challenge = await _context.Challenges
+                .FirstOrDefaultAsync(c => c.Id == id.Value);
+
             if (challenge == null)
-            {
-                return NotFound($"Challenge with ID {id.Value} not found.");
-            }
+                return NotFound();
+
             return Ok(MapToResponse(challenge));
         }
 
-        var challenges = _context.Challenges.Select(s => MapToResponse(s));
+        var challenges = await _context.Challenges
+            .Select(s => MapToResponse(s))
+            .ToArrayAsync();
+
         return Ok(challenges);
     }
 
     [HttpGet("latest")]
-    public IActionResult GetLatest()
+    public async Task<IActionResult> GetLatest()
     {
-        var latestChallenge = _context.Challenges
+        var latestChallenge = await _context.Challenges
             .OrderByDescending(c => c.StartDate)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
         if (latestChallenge == null)
         {
             return Ok(new ChallengeResponseModel(
-                        Id: Guid.Empty,
-                        Statement: "",
-                        StartDate: DateTime.MaxValue,
-                        EndDate: DateTime.MaxValue
+                Guid.Empty,
+                "",
+                DateTime.MaxValue,
+                DateTime.MaxValue
             ));
         }
 
@@ -49,20 +54,19 @@ public class ChallengeController(AppDbContext context) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public IActionResult GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id)
     {
-        var challenge = _context.Challenges.Find(id);
+        var challenge = await _context.Challenges
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (challenge == null)
-        {
-            return NotFound($"Challenge with ID {id} not found.");
-        }
+            return NotFound();
 
         return Ok(MapToResponse(challenge));
     }
 
     [HttpPost]
-    public IActionResult Create(ChallengeCreateModel model)
+    public async Task<IActionResult> Create(ChallengeCreateModel model)
     {
         var entity = new ChallengeEntity
         {
@@ -73,19 +77,18 @@ public class ChallengeController(AppDbContext context) : ControllerBase
         };
 
         _context.Challenges.Add(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        var response = MapToResponse(entity);
-        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, response);
+        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, MapToResponse(entity));
     }
 
     private static ChallengeResponseModel MapToResponse(ChallengeEntity entity)
     {
         return new ChallengeResponseModel(
-                Id: entity.Id,
-                Statement: entity.Statement,
-                StartDate: entity.StartDate,
-                EndDate: entity.EndDate
+            entity.Id,
+            entity.Statement,
+            entity.StartDate,
+            entity.EndDate
         );
     }
 }

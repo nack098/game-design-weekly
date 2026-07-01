@@ -2,6 +2,7 @@ using api.Data;
 using api.Entities;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -11,65 +12,70 @@ public class CommentController(AppDbContext context) : ControllerBase
 {
     private readonly AppDbContext _context = context;
 
-    // GET: api/comment (Gets absolutely all comments)
+    // GET: api/comment
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var comments = _context.Comments
+        var comments = await _context.Comments
             .Select(c => MapToResponse(c))
-            .ToArray();
+            .ToArrayAsync();
 
         return Ok(comments);
     }
 
-    // GET: api/comment/submission/{submissionId} (Gets comments for a specific submission)
+    // GET: api/comment/submission/{submissionId}
     [HttpGet("submission/{submissionId:guid}")]
-    public IActionResult GetBySubmission(Guid submissionId)
+    public async Task<IActionResult> GetBySubmission(Guid submissionId)
     {
-        var comments = _context.Comments
+        var comments = await _context.Comments
             .Where(c => c.SubmissionId == submissionId)
             .Select(c => MapToResponse(c))
-            .ToArray();
+            .ToArrayAsync();
 
         return Ok(comments);
     }
 
     // POST: api/comment
     [HttpPost]
-    public IActionResult Create(CommentCreateModel model)
+    public async Task<IActionResult> Create(CommentCreateModel model)
     {
-        // Safety Check: Does the submission even exist?
-        var submissionExists = _context.Submissions.Any(s => s.Id == model.SubmissionId);
+        // IMPORTANT: async DB check (prevents blocking pooler connection)
+        var submissionExists = await _context.Submissions
+            .AnyAsync(s => s.Id == model.SubmissionId);
+
         if (!submissionExists)
         {
-            return NotFound($"Cannot add comment. Submission with ID {model.SubmissionId} does not exist.");
+            return NotFound($"Submission {model.SubmissionId} not found.");
         }
 
         var entity = new CommentEntity
         {
             Id = Guid.NewGuid(),
-            Name = string.IsNullOrWhiteSpace(model.Name) ? "Anonymous" : model.Name,
+            Name = string.IsNullOrWhiteSpace(model.Name)
+                ? "Anonymous"
+                : model.Name,
             Comment = model.Comment,
             SubmissionId = model.SubmissionId
         };
 
         _context.Comments.Add(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        var response = MapToResponse(entity);
-
-        // We don't have a dedicated GetCommentById endpoint, so we just return 201 with the object
-        return CreatedAtAction(nameof(GetBySubmission), new { submissionId = entity.SubmissionId }, response);
+        return CreatedAtAction(
+            nameof(GetBySubmission),
+            new { submissionId = entity.SubmissionId },
+            MapToResponse(entity)
+        );
     }
 
     private static CommentResponseModel MapToResponse(CommentEntity entity)
     {
         return new CommentResponseModel(
-            Id: entity.Id,
-            Name: entity.Name,
-            Comment: entity.Comment,
-            SubmissionId: entity.SubmissionId,
-            CreatedAt: entity.CreatedAt
+            entity.Id,
+            entity.Name,
+            entity.Comment,
+            entity.SubmissionId,
+            entity.CreatedAt
         );
     }
 }
