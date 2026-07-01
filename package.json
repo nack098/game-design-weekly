@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"dotnet watch run --project apps/api\" \"pnpm run -r web:dev\""
+    "dev": "concurrently \"dotnet watch run --project apps/api\" \"pnpm run -r dev\""
   },
   "keywords": [],
   "author": "Nakuya",
