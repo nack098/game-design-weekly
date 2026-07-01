@@ -12,6 +12,24 @@ public class ChallengeController(AppDbContext context) : ControllerBase
 {
     private readonly AppDbContext _context = context;
 
+    // -----------------------------
+    // GET: api/challenge
+    // LIST ALL (RESTORE)
+    // -----------------------------
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var challenges = await _context.Challenges
+            .AsNoTracking()
+            .OrderByDescending(c => c.StartDate)
+            .ToListAsync();
+
+        return Ok(challenges.Select(Map));
+    }
+
+    // -----------------------------
+    // GET: api/challenge/{id}
+    // -----------------------------
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -25,6 +43,9 @@ public class ChallengeController(AppDbContext context) : ControllerBase
         return Ok(Map(challenge));
     }
 
+    // -----------------------------
+    // GET: api/challenge/latest
+    // -----------------------------
     [HttpGet("latest")]
     public async Task<IActionResult> GetLatest()
     {
@@ -46,6 +67,9 @@ public class ChallengeController(AppDbContext context) : ControllerBase
         return Ok(Map(latest));
     }
 
+    // -----------------------------
+    // POST: api/challenge
+    // -----------------------------
     [HttpPost]
     public async Task<IActionResult> Create(ChallengeCreateModel model)
     {
@@ -63,6 +87,9 @@ public class ChallengeController(AppDbContext context) : ControllerBase
         return Ok(Map(entity));
     }
 
+    // -----------------------------
+    // mapper
+    // -----------------------------
     private static ChallengeResponseModel Map(ChallengeEntity c)
         => new(c.Id, c.Statement, c.StartDate, c.EndDate);
 }
