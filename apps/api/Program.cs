@@ -56,6 +56,12 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+Console.WriteLine("Allowed origins:");
+
+foreach (var origin in allowedOrigins)
+{
+    Console.WriteLine(origin);
+}
 
 var app = builder.Build();
 
